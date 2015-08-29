@@ -2,6 +2,8 @@
   (:use compojure.core)
   (:require [compojure.handler :as handler]
             [compojure.route :as route]
+            [ring.middleware.defaults :refer :all]
+            [ring.middleware.reload :refer [wrap-reload]]
             [cemerick.friend :as friend]
             (cemerick.friend [workflows :as workflows]
                              [credentials :as creds])))
@@ -29,6 +31,10 @@
 
 (def app
   (handler/site
-   (friend/authenticate app-routes
-   			{:credential-fn (partial creds/bcrypt-credential-fn users)
-                         :workflows [(workflows/interactive-form)]})))
+   (-> app-routes
+     (wrap-defaults (assoc-in site-defaults [:security :anti-forgery] false))
+     (friend/authenticate
+      {:credential-fn (partial creds/bcrypt-credential-fn users)
+       :workflows [(workflows/interactive-form)]}))))
+
+(def reloadable-server (wrap-reload app))
