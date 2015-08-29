@@ -20,13 +20,20 @@
 (defroutes app-routes
   (GET "/" [] "Hello World")
   (GET "/authorized" request
-       (friend/authorize #{::user} "This page can only be seen by authenticated users."))
+       (->> "This page can only be seen by authenticated users."
+         (friend/authorize #{::user})))
   (GET "/admin" request
-       (friend/authorize #{::admin} "This page can only be seen by administrators."))
-  (GET "/login" [] (-> "login.html"
-                       (ring.util.response/file-response {:root "resources"})
-                       (ring.util.response/content-type "text/html")))
-  (friend/logout (ANY "/logout" request (ring.util.response/redirect "/")))
+       (->> "This page can only be seen by administrators."
+         (friend/authorize #{::admin})))
+  (GET "/never" request
+       (->> "This page can never be seen."
+         (friend/authorize #{::never})))
+  (GET "/login" []
+       (-> "login.html"
+         (ring.util.response/file-response {:root "resources"})
+         (ring.util.response/content-type "text/html")))
+  (friend/logout
+   (ANY "/logout" request (ring.util.response/redirect "/")))
   (route/not-found "Not Found"))
 
 (def app
