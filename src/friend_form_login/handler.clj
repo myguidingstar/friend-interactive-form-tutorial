@@ -9,8 +9,8 @@
                              [credentials :as creds])))
 
 (def users {"admin" {:username "admin"
-                    :password (creds/hash-bcrypt "password")
-                    :roles #{::admin}}
+                     :password (creds/hash-bcrypt "password")
+                     :roles #{::admin}}
             "dave" {:username "dave"
                     :password (creds/hash-bcrypt "password")
                     :roles #{::user}}})
