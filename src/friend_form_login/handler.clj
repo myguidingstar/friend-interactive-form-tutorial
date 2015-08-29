@@ -18,7 +18,11 @@
 (derive ::admin ::user)
 
 (defroutes app-routes
-  (GET "/" [] "Hello World")
+  (GET "/" req
+       (if-let [identity (friend/identity req)]
+         (apply str "Logged in, with these roles: "
+                (-> identity friend/current-authentication :roles))
+         "Hey, you're **anonymous** user"))
   (GET "/authorized" request
        (->> "This page can only be seen by authenticated users."
          (friend/authorize #{::user})))
