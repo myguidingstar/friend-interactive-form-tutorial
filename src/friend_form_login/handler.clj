@@ -39,9 +39,9 @@
 (def app
   (handler/site
    (-> app-routes
-     (wrap-defaults (assoc-in site-defaults [:security :anti-forgery] false))
      (friend/authenticate
       {:credential-fn (partial creds/bcrypt-credential-fn users)
-       :workflows [(workflows/interactive-form)]}))))
+       :workflows     [(workflows/interactive-form)]})
+     (wrap-defaults (assoc-in site-defaults [:security :anti-forgery] false)))))
 
 (def reloadable-server (wrap-reload app))
