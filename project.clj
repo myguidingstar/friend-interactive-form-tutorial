@@ -5,7 +5,9 @@
                  [ring/ring-defaults "0.1.5"]
                  [compojure "1.4.0"]
                  [com.cemerick/friend "0.2.1"]]
-  :plugins [[lein-ring "0.9.6"]]
-  :ring {:handler friend-form-login.handler/reloadable-server}
   :profiles
-  {:dev {:dependencies [[ring-mock "0.1.5"]]}})
+  {:dev {:plugins [[lein-ring "0.9.6"]
+                   [cider/cider-nrepl "0.9.1"]]
+         :dependencies [[ring/ring-devel "1.4.0"]
+                        [ring-mock "0.1.5"]]
+         :ring {:handler friend-form-login.handler/reloadable-server}}})
